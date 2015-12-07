@@ -18,6 +18,6 @@ class Util {
         array_push($files, $path . $f);
       }
     }
-    return self::sorted($files);
+    return $files;
   }
 }
