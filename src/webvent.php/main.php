@@ -4,7 +4,7 @@ echo 'Welcome';
 
 $pageVent = new PageVent();
 
-$pageVent->all();
+print_r($pageVent->all());
 
 
 echo 'Bye';
