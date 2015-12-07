@@ -2,16 +2,14 @@
 
 
 class Util {
-    static function listAllFiles($path) {
-        print_r(scandir($path));
+    static function listAllFiles($base, $path) {
         $files = [];
-        if ($handle = opendir($path)) {
-            while (false !== ($entry = readdir($handle))) {
-                array_push($files,$entry);
+        foreach(scandir($base.'/'.$path) as $f){
+            if(is_dir($f)){
+                array_push($f, self::listAllFiles($base, $path.'/'.$f));
+            }else{
+                array_push($f, $path.'/'.$f);
             }
-            closedir($handle);
-        }else{
-            echo "can't open";
         }
         return $files;
     }
