@@ -2,9 +2,14 @@
 
 
 class Util {
+  static function sorted($a){
+    sort($a);
+    return $a;
+  }
+
   static function listAllFiles($base, $path) {
     $files = [];
-    foreach (scandir($base . $path) as $f) {
+    foreach (self::sorted(scandir($base . $path)) as $f) {
       if ($f == '.' || $f == '..') {
         //ignore
       } elseif (is_dir($f)) {
@@ -13,6 +18,6 @@ class Util {
         array_push($files, $path . $f);
       }
     }
-    return $files;
+    return self::sorted($files);
   }
 }
