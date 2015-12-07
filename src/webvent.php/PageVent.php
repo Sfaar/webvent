@@ -17,8 +17,7 @@ class PageVent{
     }
 
     function all(){
-        echo "listing all";
-        Util::listAllFiles(".");
+        return Util::listAllFiles(".");
     }
 
 }
