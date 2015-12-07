@@ -7,3 +7,5 @@ $pageVent = new PageVent();
 $pageVent.all();
 
 
+echo 'Bye';
+
