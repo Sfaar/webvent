@@ -8,6 +8,7 @@ class Util {
             if(is_dir($f) && $f!='.' && $f!='..'){
                 print_r(self::listAllFiles($base, $path.'/'.$f));
             }else{
+                print $f;
                 array_push($f, $path.'/'.$f);
             }
         }
