@@ -1,5 +1,9 @@
 <?php
+include_once("Pages.php");
+echo 'Welcome';
 
-echo 'Welcome'
+$pageVent = new PageVent();
 
-?>
+$pageVent.all();
+
+
