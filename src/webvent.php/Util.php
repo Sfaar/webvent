@@ -3,6 +3,7 @@
 
 class Util {
     static function listAllFiles($path) {
+        print_r(scandir($path));
         $files = [];
         if ($handle = opendir($path)) {
             while (false !== ($entry = readdir($handle))) {
