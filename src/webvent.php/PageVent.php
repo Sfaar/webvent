@@ -8,7 +8,8 @@ class PageVent extends AbstractVent {
      "md"=>ContentType::MARKDOWN,
      "markdown"=>ContentType::MARKDOWN,
      "txt"=>ContentType::TEXT,
-     "html"=>ContentType::HTML];
+     "html"=>ContentType::HTML
+  ];
 
   static $pagePath = "pages";
 
@@ -20,7 +21,7 @@ class PageVent extends AbstractVent {
     return "";
   }
 
-  public function all() {
+  public static function all() {
     return Util::listAllFiles(self::$pagePath, "");
   }
 
@@ -48,6 +49,4 @@ class PageVent extends AbstractVent {
   public function respond() {
     return $this->page($this->venture->verse());
   }
-
-
 }
