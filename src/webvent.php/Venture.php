@@ -36,6 +36,8 @@ class Venture {
         case "~vent.page":
           $this->vent = VentEnum::Page;
           break;
+        case "~vent.content":
+          $this->vent = VentEnum::Content;
       }
     }
   }
