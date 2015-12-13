@@ -4,7 +4,12 @@ include_once("AbstractVent.php");
 
 class PageVent extends AbstractVent {
 
-  static $pageTypes = ["md", "txt", "html"];
+  static $pageType = [
+     "md"=>ContentType::MARKDOWN,
+     "markdown"=>ContentType::MARKDOWN,
+     "txt"=>ContentType::TEXT,
+     "html"=>ContentType::HTML];
+
   static $pagePath = "pages";
 
   public function __construct(Venture $venture) {
@@ -21,24 +26,28 @@ class PageVent extends AbstractVent {
 
   public function page($url){
     $pagePath = self::$pagePath;
-    return $this->_page("$pagePath/$url")."\n";
+    return $this->_page("$pagePath/$url");
   }
 
   private function _page($url) {
     if (is_dir($url)) {
       return $this->_page("$url/index");
     } else {
-      foreach (self::$pageTypes as $ext) {
+      foreach (array_keys(self::$pageType) as $ext) {
         $fileName = "$url.$ext";
         if (is_file($fileName)) {
-          return file_get_contents($fileName);
+          return new Response(file_get_contents($fileName),
+             self::$pageType[$ext], HttpStatus::OK);
         }
       }
     }
-    return "Page not found";
+    return Response::NOT_FOUND();
   }
 
+  /** @return Response */
   public function respond() {
-    echo $this->page($this->venture->verse());
+    return $this->page($this->venture->verse());
   }
+
+
 }
