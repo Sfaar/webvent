@@ -1,15 +1,14 @@
 <?php
 include_once("Util.php");
+include_once("AbstractVent.php");
 
-class PageVent {
+class PageVent extends AbstractVent {
 
   static $pageTypes = ["md", "txt", "html"];
   static $pagePath = "pages";
 
-  /**
-   * PageVent constructor.
-   */
-  public function __construct() {
+  public function __construct(Venture $venture) {
+    parent::__construct($venture);
   }
 
   function __toString() {
@@ -39,4 +38,7 @@ class PageVent {
     return "Page not found";
   }
 
+  public function respond() {
+    echo $this->page($this->venture->verse());
+  }
 }
