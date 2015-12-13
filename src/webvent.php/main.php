@@ -1,12 +1,8 @@
 <?php
 try {
-  include_once("Venture.php");
-  include_once("VentFactory.php");
-  $venture = new Venture($_REQUEST, $_SERVER);
-  $vent = VentFactory::make($venture);
-  $vent->respond()->reply();
+  require("_webvent.php");
+  WebVent::factory(new Venture($_REQUEST, $_SERVER))->respond()->send();
   exit;
 } catch (Exception $e) {
   echo $e;
 }
-

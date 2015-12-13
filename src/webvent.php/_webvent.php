@@ -1,8 +1,9 @@
 <?php
-include_once('Venture.php');
-include_once('PageVent.php');
-class VentFactory{
-  public static function make($venture){
+require_once('Venture.php');
+require_once('PageVent.php');
+
+class WebVent{
+  public static function factory($venture){
     if($venture instanceof Venture){
       switch($venture->vent()){
         case VentEnum::Page:

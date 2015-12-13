@@ -8,58 +8,56 @@ include_once("VentEnum.php");
  * at a vent along with a verse. A vent is expected to yield a response.
  */
 class Venture {
-  private $_vent;
-  private $_verse;
-  private $_request;
-  private $_server;
+  private $vent;
+  private $verse;
+  private $request;
+  private $server;
 
   public function __construct($request, $server) {
-    $this->_request = $request;
-    $this->_server = $server;
-    $this->setVentVerse();
+    $this->request = $request;
+    $this->server = $server;
+    $this->init();
   }
 
-  private function setVentVerse() {
-    if (array_key_exists('venture', $this->_request)) {
-      $this->setupVent();
+  private function init() {
+    if (array_key_exists('venture', $this->request)) {
+      $this->initWebVenture();
     } else {
-      $this->setupNonVent();
+      $this->initNonVenture();
     }
   }
 
-  private function setupVent() {
-    $parts = explode("/", $this->_request['venture'], 2);
+  private function initWebVenture() {
+    $parts = explode("/", $this->request['venture'], 2);
     $count = count($parts);
     if ($count > 0) {
-      $this->_verse = $count > 1 ? $parts[1] : "";
+      $this->verse = $count > 1 ? $parts[1] : "";
       switch (strtolower($parts[0])) {
         case "~vent.page":
-          $this->_vent = VentEnum::Page;
+          $this->vent = VentEnum::Page;
           break;
       }
     }
   }
 
-  private function setupNonVent() {
-    $this->_vent = VentEnum::NonVent;
-    $this->_verse = $this->_server['QUERY_STRING'];
+  private function initNonVenture() {
+    $this->vent = VentEnum::NonVent;
+    $this->verse = $this->server['QUERY_STRING'];
   }
 
   public function vent() {
-    return $this->_vent;
+    return $this->vent;
   }
 
   public function verse() {
-    return $this->_verse;
+    return $this->verse;
   }
 
   public function request() {
-    return $this->_request;
+    return $this->request;
   }
 
   public function server() {
-    return $this->_server;
+    return $this->server;
   }
-
-
 }

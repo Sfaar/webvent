@@ -1,2 +1,2 @@
 <?php
-include_once("webvent.php/main.php");
+require("webvent.php/main.php");

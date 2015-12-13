@@ -2,7 +2,8 @@
 
 class ContentType{
   const TEXT = "text";
-  const MARKDOWN = "text/markdown; charset=UTF-8";
+  const PLAINTEXT = "text/plain";
+  const MARKDOWN = "text;markdown";
   const HTML = "text/html";
   const JSON = "application/json";
 }

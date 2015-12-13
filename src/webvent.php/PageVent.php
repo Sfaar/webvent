@@ -5,48 +5,49 @@ include_once("AbstractVent.php");
 class PageVent extends AbstractVent {
 
   static $pageType = [
-     "md"=>ContentType::MARKDOWN,
-     "markdown"=>ContentType::MARKDOWN,
-     "txt"=>ContentType::TEXT,
-     "html"=>ContentType::HTML
+     "md" => ContentType::MARKDOWN,
+     "markdown" => ContentType::MARKDOWN,
+     "txt" => ContentType::PLAINTEXT,
+     "html" => ContentType::HTML
   ];
 
-  static $pagePath = "pages";
+  static $pagesDir = "pages";
 
   public function __construct(Venture $venture) {
     parent::__construct($venture);
+  }
+
+  public static function all() {
+    return Util::listAllFiles(self::$pagesDir, "");
   }
 
   function __toString() {
     return "";
   }
 
-  public static function all() {
-    return Util::listAllFiles(self::$pagePath, "");
+  /** @return Response */
+  public function respond() {
+    return $this->providePage($this->venture->verse());
   }
 
-  public function page($url){
-    $pagePath = self::$pagePath;
-    return $this->_page("$pagePath/$url");
+  public function providePage($pageURI) {
+    $pagePath = self::$pagesDir;
+    return $this->_providePage("$pagePath/$pageURI");
   }
 
-  private function _page($url) {
-    if (is_dir($url)) {
-      return $this->_page("$url/index");
+  private function _providePage($path) {
+    if (is_dir($path)) {
+      return $this->_providePage("$path/index");
     } else {
       foreach (array_keys(self::$pageType) as $ext) {
-        $fileName = "$url.$ext";
+        $fileName = "$path.$ext";
         if (is_file($fileName)) {
-          return new Response(file_get_contents($fileName),
-             self::$pageType[$ext], HttpStatus::OK);
+          return Response::OK()
+            ->setContent(file_get_contents($fileName))
+            ->setContentType(self::$pageType[$ext]);
         }
       }
     }
     return Response::NOT_FOUND();
-  }
-
-  /** @return Response */
-  public function respond() {
-    return $this->page($this->venture->verse());
   }
 }
