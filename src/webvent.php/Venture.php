@@ -38,8 +38,27 @@ class Venture {
           break;
         case "~vent.content":
           $this->vent = VentEnum::Content;
+          break;
+        default:
+          $this->vent = VentEnum::None;
+          break;
       }
     }
+    // transparent page and content access
+    if($this->vent==VentEnum::None){
+      $uPath = $this->request['venture'];
+      $this->verse = $uPath;
+      if(self::isContentType($uPath)) {
+        $this->vent = VentEnum::Content;
+      }else{
+        $this->vent = VentEnum::Render;
+      }
+    }
+  }
+
+  private static function isContentType($path){
+    $parts = explode(".",$path);
+    return count($parts)>1;
   }
 
   private function initNonVenture() {
