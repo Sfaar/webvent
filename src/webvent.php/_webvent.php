@@ -14,6 +14,8 @@ class WebVent{
           return new PageVent($venture);
         case VentEnum::Content:
           return new ContentVent($venture);
+        default:
+          echo 'X'.$venture->vent();
       }
     }
   }

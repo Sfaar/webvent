@@ -19,51 +19,9 @@ class Venture {
     $this->init();
   }
 
-  private function init() {
-    if (array_key_exists('venture', $this->request)) {
-      $this->initWebVenture();
-    } else {
-      $this->initNonVenture();
-    }
-  }
-
-  private function initWebVenture() {
-    $parts = explode("/", $this->request['venture'], 2);
-    $count = count($parts);
-    if ($count > 0) {
-      $this->verse = $count > 1 ? $parts[1] : "";
-      switch (strtolower($parts[0])) {
-        case "~vent.page":
-          $this->vent = VentEnum::Page;
-          break;
-        case "~vent.content":
-          $this->vent = VentEnum::Content;
-          break;
-        default:
-          $this->vent = VentEnum::None;
-          break;
-      }
-    }
-    // transparent page and content access
-    if($this->vent==VentEnum::None){
-      $uPath = $this->request['venture'];
-      $this->verse = $uPath;
-      if(self::isContentType($uPath)) {
-        $this->vent = VentEnum::Content;
-      }else{
-        $this->vent = VentEnum::Render;
-      }
-    }
-  }
-
-  private static function isContentType($path){
-    $parts = explode(".",$path);
-    return count($parts)>1;
-  }
-
-  private function initNonVenture() {
-    $this->vent = VentEnum::NonVent;
-    $this->verse = $this->server['QUERY_STRING'];
+  private static function isContentType($path) {
+    $parts = explode(".", $path);
+    return count($parts) > 1;
   }
 
   public function vent() {
@@ -80,5 +38,47 @@ class Venture {
 
   public function server() {
     return $this->server;
+  }
+
+  private function init() {
+    (array_key_exists('venture', $this->request))
+       ? $this->initWithVenture()
+       : $this->initNonVenture();
+  }
+
+  private function initWithVenture() {
+    $parts = explode("/", $this->request['venture'], 2);
+    $count = count($parts);
+    if ($count > 0) {
+      $this->verse = $count > 1 ? $parts[1] : "";
+      switch (strtolower($parts[0])) {
+        case "~vent.page":
+          $this->vent = VentEnum::Page;
+          break;
+        case "~vent.content":
+          $this->vent = VentEnum::Content;
+          break;
+        default:
+          $this->vent = VentEnum::None;
+          break;
+      }
+    }
+    // transparent content access and render redirect
+    if ($this->vent == VentEnum::None) {
+      $this->forwardContentOrRender();
+    }
+  }
+
+  private function forwardContentOrRender() {
+    $uPath = $this->request['venture'];
+    $this->verse = $uPath;
+    $this->vent = self::isContentType($uPath)
+       ? VentEnum::Content
+       : $this->vent = VentEnum::Render;
+  }
+
+  private function initNonVenture() {
+    $this->vent = VentEnum::Render;
+    $this->verse = $this->server['QUERY_STRING'];
   }
 }
