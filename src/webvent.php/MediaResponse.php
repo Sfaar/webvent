@@ -2,6 +2,7 @@
 require_once('Response.php');
 
 class MediaResponse extends Response{
+
   public function send() {
     $fp = fopen($this->content, 'rb');
     header("Content-Type:" . $this->contentType, true, $this->status);
@@ -17,10 +18,24 @@ class MediaResponse extends Response{
     return (new MediaResponse())
        ->setStatus(HttpStatus::OK)
        ->setContent($path)
-       ->setContentType(self::contentType($path));
+       ->setContentType(self::detectMIMEType($path));
   }
 
-  public static function contentType($path){
+  private static function detectMIMEType($path) {
+    return function_exists('finfo_open')
+       ? self::getFileMime($path)
+       : self::getMimeByExt($path);
+  }
+
+  private static function getFileMime($path){
+    $fi = new finfo(FILEINFO_MIME_TYPE);
+    $contentType = $fi->file($path);
+    return $contentType;
+  }
+
+
+  private static function getMimeByExt($path){
+    error_log("php_fileinfo extension not found",0);
     $parts = explode(".",$path);
     $last = count($parts)-1;
     $ext = $parts[$last];
